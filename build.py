@@ -94,7 +94,7 @@ def curriculum(sura_by_name):
             a, b = map(int, rng.split('-'))
             n += 1
             hifz = '(حفظ)' in title
-            lessons.append({'id': f't{n}', 'kind': 't', 'title': re.sub(r'\s*\(حفظ\)', '', title),
+            lessons.append({'id': f't{n}', 'kind': 't', 'title': re.sub(r'\s*\(حفظ\)|\s*\+.*$', '', title),
                             'sura': s, 'from': a, 'to': b, 'week': week, 'hifz': hifz})
             sura_of_grade = s
         h = 0
