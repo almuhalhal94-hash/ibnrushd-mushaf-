@@ -333,3 +333,7 @@ main{max-width:760px;margin:0 auto;padding:16px 16px 40px;outline:none}
 .hide .ay:not(.shown) .w.h.err{background:linear-gradient(90deg,#d32f2f 0 100%) bottom/100% 4px no-repeat,rgba(211,47,47,.16);animation:verr .5s 3}
 .q .w.hint,.q .w.hint *{color:#d97706!important}
 @keyframes verr{50%{background-color:rgba(211,47,47,.4)}}
+.vrbig{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 12px;padding:12px 14px;border:0;border-radius:16px;background:linear-gradient(135deg,var(--em),var(--em3));color:#fff;font:inherit;text-align:start;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.vrbig .vi{flex:none;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:26px}
+.vrbig b{display:block;font-size:17px}.vrbig small{display:block;font-size:13px;opacity:.9}
+.vrbig.on{background:linear-gradient(135deg,#8e1b1b,#c62828)}.vrbig.on b::after{content:" (اضغط للإغلاق)";font-weight:400;font-size:12px}
