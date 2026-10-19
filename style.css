@@ -323,3 +323,13 @@ main{max-width:760px;margin:0 auto;padding:16px 16px 40px;outline:none}
   .inner{padding:20px 22px 12px}
 }
 @media (max-width:360px){.acts{grid-template-columns:repeat(3,1fr)}}
+/* التسميع بالمايك */
+.vr .vrh{display:flex;align-items:center;gap:12px}
+.vr .vrh b{display:block;font-size:15px}.vr .vrh small{display:block;color:var(--mute);font-size:13px;min-height:1.2em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:62vw}
+.vmic{flex:none;width:58px;height:58px;border-radius:50%;border:0;font-size:26px;background:var(--em,#0a6e4b);color:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.vmic.live{background:#c62828;animation:vpulse 1.3s infinite}
+@keyframes vpulse{0%{box-shadow:0 0 0 0 rgba(198,40,40,.55)}70%{box-shadow:0 0 0 16px rgba(198,40,40,0)}100%{box-shadow:0 0 0 0 rgba(198,40,40,0)}}
+.vr .vrc{margin-inline-start:auto;font-weight:800;font-size:13.5px}
+.hide .ay:not(.shown) .w.h.err{background:linear-gradient(90deg,#d32f2f 0 100%) bottom/100% 4px no-repeat,rgba(211,47,47,.16);animation:verr .5s 3}
+.q .w.hint,.q .w.hint *{color:#d97706!important}
+@keyframes verr{50%{background-color:rgba(211,47,47,.4)}}
