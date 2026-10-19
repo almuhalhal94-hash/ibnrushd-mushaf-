@@ -423,5 +423,8 @@ applyPrefs();inAppBanner();
 matchMedia('(prefers-color-scheme: dark)').addEventListener&&matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyPrefs);
 Promise.all([fetch('data/mushaf.json').then(function(r){return r.json()}),fetch('audio/audio.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():{}}).catch(function(){return {}})]).then(function(r){
   D=r[0];AUDIO=r[1]||{};delete AUDIO._readme;addEventListener('hashchange',route);route()}).catch(function(){APP.innerHTML='<div class="card empty">تعذّر تحميل المصحف. تأكد من الاتصال بالإنترنت أول مرة، ثم يشتغل بدون نت.</div>'});
-if('serviceWorker' in navigator)addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
+if('serviceWorker' in navigator){var hadSW=!!navigator.serviceWorker.controller,reloaded=false;
+  // إذا نزل تحديث جديد للمصحف تنفتح النسخة الجديدة تلقائيًا
+  navigator.serviceWorker.addEventListener('controllerchange',function(){if(hadSW&&!reloaded){reloaded=true;location.reload()}});
+  addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){r.update()}).catch(function(){})})}
 })();
