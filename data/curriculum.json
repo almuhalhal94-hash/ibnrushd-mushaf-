@@ -1,0 +1,576 @@
+{
+ "6": {
+  "name": "السادس الابتدائي",
+  "lessons": [
+   {
+    "id": "t1",
+    "kind": "t",
+    "title": "سورة الحاقّة 1 + أحكام المدّ",
+    "sura": 69,
+    "from": 1,
+    "to": 10,
+    "week": 1,
+    "hifz": true
+   },
+   {
+    "id": "t2",
+    "kind": "t",
+    "title": "سورة الحاقّة 2 + المدّ المتصل",
+    "sura": 69,
+    "from": 11,
+    "to": 18,
+    "week": 2,
+    "hifz": false
+   },
+   {
+    "id": "t3",
+    "kind": "t",
+    "title": "سورة الحاقّة 3 + المدّ المنفصل",
+    "sura": 69,
+    "from": 19,
+    "to": 29,
+    "week": 3,
+    "hifz": false
+   },
+   {
+    "id": "t4",
+    "kind": "t",
+    "title": "سورة الحاقّة 4",
+    "sura": 69,
+    "from": 30,
+    "to": 43,
+    "week": 4,
+    "hifz": false
+   },
+   {
+    "id": "t5",
+    "kind": "t",
+    "title": "سورة الحاقّة 5",
+    "sura": 69,
+    "from": 44,
+    "to": 52,
+    "week": 5,
+    "hifz": false
+   },
+   {
+    "id": "t6",
+    "kind": "t",
+    "title": "سورة القلم 1",
+    "sura": 68,
+    "from": 1,
+    "to": 9,
+    "week": 6,
+    "hifz": true
+   },
+   {
+    "id": "t7",
+    "kind": "t",
+    "title": "سورة القلم 2",
+    "sura": 68,
+    "from": 10,
+    "to": 22,
+    "week": 8,
+    "hifz": false
+   },
+   {
+    "id": "t8",
+    "kind": "t",
+    "title": "سورة القلم 3",
+    "sura": 68,
+    "from": 23,
+    "to": 33,
+    "week": 9,
+    "hifz": false
+   },
+   {
+    "id": "t9",
+    "kind": "t",
+    "title": "سورة القلم 4",
+    "sura": 68,
+    "from": 34,
+    "to": 43,
+    "week": 10,
+    "hifz": false
+   },
+   {
+    "id": "t10",
+    "kind": "t",
+    "title": "سورة القلم 5",
+    "sura": 68,
+    "from": 44,
+    "to": 52,
+    "week": 11,
+    "hifz": false
+   },
+   {
+    "id": "h1",
+    "kind": "h",
+    "title": "سورة الحاقّة (1-10)",
+    "sura": 69,
+    "from": 1,
+    "to": 10,
+    "week": 1,
+    "hifz": true,
+    "ref": "t1"
+   },
+   {
+    "id": "h2",
+    "kind": "h",
+    "title": "سورة القلم (1-9)",
+    "sura": 68,
+    "from": 1,
+    "to": 9,
+    "week": 6,
+    "hifz": true,
+    "ref": "t6"
+   }
+  ]
+ },
+ "7": {
+  "name": "الأول الإعدادي",
+  "lessons": [
+   {
+    "id": "t1",
+    "kind": "t",
+    "title": "سورة الواقعة 1",
+    "sura": 56,
+    "from": 1,
+    "to": 12,
+    "week": 1,
+    "hifz": false
+   },
+   {
+    "id": "t2",
+    "kind": "t",
+    "title": "سورة الواقعة 2",
+    "sura": 56,
+    "from": 13,
+    "to": 26,
+    "week": 3,
+    "hifz": false
+   },
+   {
+    "id": "t3",
+    "kind": "t",
+    "title": "سورة الواقعة 3",
+    "sura": 56,
+    "from": 27,
+    "to": 40,
+    "week": 4,
+    "hifz": false
+   },
+   {
+    "id": "t4",
+    "kind": "t",
+    "title": "سورة الواقعة 4",
+    "sura": 56,
+    "from": 41,
+    "to": 48,
+    "week": 5,
+    "hifz": false
+   },
+   {
+    "id": "t5",
+    "kind": "t",
+    "title": "سورة الواقعة 5",
+    "sura": 56,
+    "from": 49,
+    "to": 56,
+    "week": 6,
+    "hifz": false
+   },
+   {
+    "id": "t6",
+    "kind": "t",
+    "title": "سورة الواقعة 6",
+    "sura": 56,
+    "from": 57,
+    "to": 62,
+    "week": 8,
+    "hifz": false
+   },
+   {
+    "id": "t7",
+    "kind": "t",
+    "title": "سورة الواقعة 7",
+    "sura": 56,
+    "from": 63,
+    "to": 70,
+    "week": 9,
+    "hifz": false
+   },
+   {
+    "id": "t8",
+    "kind": "t",
+    "title": "سورة الواقعة 8",
+    "sura": 56,
+    "from": 71,
+    "to": 80,
+    "week": 10,
+    "hifz": false
+   },
+   {
+    "id": "t9",
+    "kind": "t",
+    "title": "سورة الواقعة 9",
+    "sura": 56,
+    "from": 81,
+    "to": 87,
+    "week": 11,
+    "hifz": false
+   },
+   {
+    "id": "t10",
+    "kind": "t",
+    "title": "سورة الواقعة 10",
+    "sura": 56,
+    "from": 88,
+    "to": 96,
+    "week": 13,
+    "hifz": false
+   },
+   {
+    "id": "h1",
+    "kind": "h",
+    "title": "سورة الروم (30-34)",
+    "unit": "العقيدة",
+    "sura": 30,
+    "from": 30,
+    "to": 34,
+    "week": 2,
+    "hifz": true
+   },
+   {
+    "id": "h2",
+    "kind": "h",
+    "title": "سورة الفتح (18-21)",
+    "unit": "السيرة النبوية",
+    "sura": 48,
+    "from": 18,
+    "to": 21,
+    "week": 5,
+    "hifz": true
+   },
+   {
+    "id": "h3",
+    "kind": "h",
+    "title": "سورة الأحزاب (32-34)",
+    "unit": "السيرة النبوية",
+    "sura": 33,
+    "from": 32,
+    "to": 34,
+    "week": 11,
+    "hifz": true
+   },
+   {
+    "id": "h4",
+    "kind": "h",
+    "title": "سورة القلم (1-7)",
+    "unit": "الأخلاق والتهذيب",
+    "sura": 68,
+    "from": 1,
+    "to": 7,
+    "week": 13,
+    "hifz": true
+   }
+  ]
+ },
+ "8": {
+  "name": "الثاني الإعدادي",
+  "lessons": [
+   {
+    "id": "t1",
+    "kind": "t",
+    "title": "سورة يس 1",
+    "sura": 36,
+    "from": 1,
+    "to": 12,
+    "week": 1,
+    "hifz": false
+   },
+   {
+    "id": "t2",
+    "kind": "t",
+    "title": "سورة يس 2",
+    "sura": 36,
+    "from": 13,
+    "to": 19,
+    "week": 2,
+    "hifz": false
+   },
+   {
+    "id": "t3",
+    "kind": "t",
+    "title": "سورة يس 3",
+    "sura": 36,
+    "from": 20,
+    "to": 27,
+    "week": 3,
+    "hifz": false
+   },
+   {
+    "id": "t4",
+    "kind": "t",
+    "title": "سورة يس 4",
+    "sura": 36,
+    "from": 28,
+    "to": 32,
+    "week": 5,
+    "hifz": false
+   },
+   {
+    "id": "t5",
+    "kind": "t",
+    "title": "سورة يس 5",
+    "sura": 36,
+    "from": 33,
+    "to": 40,
+    "week": 6,
+    "hifz": false
+   },
+   {
+    "id": "t6",
+    "kind": "t",
+    "title": "سورة يس 6",
+    "sura": 36,
+    "from": 41,
+    "to": 47,
+    "week": 7,
+    "hifz": false
+   },
+   {
+    "id": "t7",
+    "kind": "t",
+    "title": "سورة يس 7",
+    "sura": 36,
+    "from": 48,
+    "to": 58,
+    "week": 9,
+    "hifz": false
+   },
+   {
+    "id": "t8",
+    "kind": "t",
+    "title": "سورة يس 8",
+    "sura": 36,
+    "from": 59,
+    "to": 68,
+    "week": 10,
+    "hifz": false
+   },
+   {
+    "id": "t9",
+    "kind": "t",
+    "title": "سورة يس 9",
+    "sura": 36,
+    "from": 69,
+    "to": 76,
+    "week": 11,
+    "hifz": false
+   },
+   {
+    "id": "t10",
+    "kind": "t",
+    "title": "سورة يس 10",
+    "sura": 36,
+    "from": 77,
+    "to": 83,
+    "week": 13,
+    "hifz": false
+   },
+   {
+    "id": "h1",
+    "kind": "h",
+    "title": "سورة الفتح (1-7)",
+    "unit": "السيرة النبوية",
+    "sura": 48,
+    "from": 1,
+    "to": 7,
+    "week": 4,
+    "hifz": true
+   },
+   {
+    "id": "h2",
+    "kind": "h",
+    "title": "سورة البقرة (163-164)",
+    "unit": "العقيدة",
+    "sura": 2,
+    "from": 163,
+    "to": 164,
+    "week": 6,
+    "hifz": true
+   },
+   {
+    "id": "h3",
+    "kind": "h",
+    "title": "سورة لقمان (33-34)",
+    "unit": "العقيدة",
+    "sura": 31,
+    "from": 33,
+    "to": 34,
+    "week": 10,
+    "hifz": true
+   },
+   {
+    "id": "h4",
+    "kind": "h",
+    "title": "سورة الزخرف (67-73)",
+    "unit": "الأخلاق والتهذيب",
+    "sura": 43,
+    "from": 67,
+    "to": 73,
+    "week": 12,
+    "hifz": true
+   }
+  ]
+ },
+ "9": {
+  "name": "الثالث الإعدادي",
+  "lessons": [
+   {
+    "id": "t1",
+    "kind": "t",
+    "title": "سورة الكهف 1",
+    "sura": 18,
+    "from": 1,
+    "to": 8,
+    "week": 1,
+    "hifz": false
+   },
+   {
+    "id": "t2",
+    "kind": "t",
+    "title": "سورة الكهف 2",
+    "sura": 18,
+    "from": 9,
+    "to": 15,
+    "week": 2,
+    "hifz": false
+   },
+   {
+    "id": "t3",
+    "kind": "t",
+    "title": "سورة الكهف 3",
+    "sura": 18,
+    "from": 16,
+    "to": 18,
+    "week": 3,
+    "hifz": false
+   },
+   {
+    "id": "t4",
+    "kind": "t",
+    "title": "سورة الكهف 4",
+    "sura": 18,
+    "from": 19,
+    "to": 21,
+    "week": 4,
+    "hifz": false
+   },
+   {
+    "id": "t5",
+    "kind": "t",
+    "title": "سورة الكهف 5",
+    "sura": 18,
+    "from": 22,
+    "to": 27,
+    "week": 5,
+    "hifz": false
+   },
+   {
+    "id": "t6",
+    "kind": "t",
+    "title": "سورة الكهف 6",
+    "sura": 18,
+    "from": 28,
+    "to": 31,
+    "week": 7,
+    "hifz": false
+   },
+   {
+    "id": "t7",
+    "kind": "t",
+    "title": "سورة الكهف 7",
+    "sura": 18,
+    "from": 32,
+    "to": 41,
+    "week": 8,
+    "hifz": false
+   },
+   {
+    "id": "t8",
+    "kind": "t",
+    "title": "سورة الكهف 8",
+    "sura": 18,
+    "from": 42,
+    "to": 49,
+    "week": 10,
+    "hifz": false
+   },
+   {
+    "id": "t9",
+    "kind": "t",
+    "title": "سورة الكهف 9",
+    "sura": 18,
+    "from": 50,
+    "to": 55,
+    "week": 12,
+    "hifz": false
+   },
+   {
+    "id": "t10",
+    "kind": "t",
+    "title": "سورة الكهف 10",
+    "sura": 18,
+    "from": 56,
+    "to": 59,
+    "week": 13,
+    "hifz": false
+   },
+   {
+    "id": "h1",
+    "kind": "h",
+    "title": "سورة التوبة (38-41)",
+    "unit": "السيرة النبوية",
+    "sura": 9,
+    "from": 38,
+    "to": 41,
+    "week": 4,
+    "hifz": true
+   },
+   {
+    "id": "h2",
+    "kind": "h",
+    "title": "سورة الأحزاب (56-59)",
+    "unit": "الأخلاق والتهذيب",
+    "sura": 33,
+    "from": 56,
+    "to": 59,
+    "week": 6,
+    "hifz": true
+   },
+   {
+    "id": "h3",
+    "kind": "h",
+    "title": "سورة الحج (1-7)",
+    "unit": "العقيدة",
+    "sura": 22,
+    "from": 1,
+    "to": 7,
+    "week": 9,
+    "hifz": true
+   },
+   {
+    "id": "h4",
+    "kind": "h",
+    "title": "سورة التحريم (6-8)",
+    "unit": "الأخلاق والتهذيب",
+    "sura": 66,
+    "from": 6,
+    "to": 8,
+    "week": 13,
+    "hifz": true
+   }
+  ]
+ }
+}

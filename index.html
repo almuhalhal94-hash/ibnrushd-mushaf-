@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-skin="brand">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مصحف ابن رشد</title>
+<meta name="description" content="مصحف ابن رشد: آيات منهج التلاوة والحفظ للفصل الأول، ملوّنة بأحكام التجويد، مع معاني الكلمات ووضع التسميع. قسم التربية الإسلامية – مدرسة ابن رشد الإعدادية للبنين.">
+<meta name="theme-color" content="#0a6e4b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="مصحف ابن رشد">
+<meta property="og:title" content="📖 مصحف ابن رشد">
+<meta property="og:description" content="آيات منهج التلاوة والحفظ ملوّنة بأحكام التجويد · قسم التربية الإسلامية – مدرسة ابن رشد">
+<meta property="og:image" content="icons/icon-512.png">
+<link rel="preload" href="fonts/UthmanicHafs.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script>try{var t=JSON.parse(localStorage.getItem('mr_prefs')||'{}');if(t.skin)document.documentElement.dataset.skin=t.skin;if(t.dark!=null)document.documentElement.dataset.dark=t.dark?'1':'0'}catch(e){}</script>
+</head>
+<body>
+<div id="inapp" hidden></div>
+<header class="bar">
+  <a href="#/" class="brand" aria-label="الرئيسية">
+    <svg class="logo" viewBox="0 0 48 48" aria-hidden="true"><use href="#star8"/><circle cx="24" cy="24" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+    <span><b>مصحف ابن رشد</b><small>قسم التربية الإسلامية</small></span>
+  </a>
+  <div class="tools">
+    <button id="btnInstall" class="ic" hidden aria-label="تثبيت التطبيق" title="تثبيت">⤓</button>
+    <button id="btnSkin" class="ic" aria-label="تبديل التصميم: هوية القسم أو ورق المصحف" title="تبديل التصميم">◈</button>
+    <button id="btnDark" class="ic" aria-label="الوضع الليلي" title="الوضع الليلي">☾</button>
+  </div>
+</header>
+<main id="app" tabindex="-1"><div class="boot"><svg viewBox="0 0 48 48"><use href="#star8"/></svg><p>بسم الله…</p></div></main>
+<footer class="foot">
+  <div class="orn" aria-hidden="true"></div>
+  <p>إعداد: أ. طلال سعود المهلهل</p>
+  <p class="cp">© 2026 أ. طلال سعود المهلهل – جميع الحقوق محفوظة</p>
+  <p class="links"><a href="#/about">المصادر وطريقة التثبيت</a> · <a href="https://almuhalhal94-hash.github.io/ibnrushd-islamic/">موقع القسم</a></p>
+</footer>
+<div id="sheet" class="sheet" role="dialog" aria-modal="true" hidden><div class="scrim" data-close></div><div class="panel"><button class="x" data-close aria-label="إغلاق">✕</button><div class="grab"></div><div class="body"></div></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="player" hidden></div>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="star8" viewBox="0 0 48 48"><path fill="currentColor" d="M24 2l5.6 8.5 10-2.1-2.1 10L46 24l-8.5 5.6 2.1 10-10-2.1L24 46l-5.6-8.5-10 2.1 2.1-10L2 24l8.5-5.6-2.1-10 10 2.1z" opacity=".95"/></symbol>
+  </defs>
+</svg>
+<script src="app.js" defer></script>
+</body>
+</html>
