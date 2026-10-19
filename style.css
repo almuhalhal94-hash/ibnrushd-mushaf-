@@ -342,3 +342,11 @@ main{max-width:760px;margin:0 auto;padding:16px 16px 40px;outline:none}
 .q .w.err{cursor:pointer}
 .vr .credit{margin:0;padding-top:8px;border-top:1px dashed color-mix(in srgb,var(--gold) 50%,transparent);font-size:12.5px;color:var(--mute);text-align:center}
 .foot .idea{font-size:13px;opacity:.85}
+.vrbar{position:fixed;z-index:40;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:20px;background:var(--card,#fff);border:1.5px solid var(--gold);box-shadow:0 8px 28px rgba(0,0,0,.22);max-width:640px;margin:0 auto}
+.vrbar .vmic{width:54px;height:54px;font-size:24px}
+.vrbar .vt{flex:1;min-width:0}.vrbar .vt b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vrbar .vt small{display:block;font-size:12px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:Tajawal,sans-serif}
+.vrbar .vs{display:flex;flex-direction:column;align-items:center;gap:2px}.vrbar .vrc{font-size:11px;font-weight:800;color:var(--mute);white-space:nowrap}
+.vrbar .vx{border:0;background:none;font-size:16px;color:var(--mute);padding:6px;cursor:pointer;align-self:flex-start}
+body.vr-on{padding-bottom:96px}
+.miss{margin-top:12px;font-size:14px}.miss li b{font-family:var(--qf,inherit)}
