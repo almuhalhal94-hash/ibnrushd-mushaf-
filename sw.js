@@ -1,5 +1,5 @@
 /* مصحف ابن رشد — يعمل بدون إنترنت بعد أول فتح */
-var V='mushaf-v6';
+var V='mushaf-v7';
 var SHELL=['./','index.html','style.css','app.js','data/mushaf.json','manifest.webmanifest',
   'fonts/UthmanicHafs.woff2','fonts/ArefRuqaa-Bold.woff2','fonts/Tajawal-Regular.woff2','fonts/Tajawal-Bold.woff2','fonts/Tajawal-ExtraBold.woff2',
   'icons/icon-192.png','icons/icon-512.png','icons/apple-touch-icon.png'];

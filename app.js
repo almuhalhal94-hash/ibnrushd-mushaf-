@@ -279,7 +279,7 @@ function vrClose(){vrStop();VR=null;var M=$('#vr');if(M)M.hidden=true;$$('[data-
   var Q=$('#q');if(Q){Q.classList.remove('hide');$$('.ay',Q).forEach(function(a){a.classList.remove('shown','cur')});$$('.w',Q).forEach(function(w){w.classList.remove('h','err','hint')})}}
 function vrFirst(k){for(var i=0;i<VR.E.length;i++)if(VR.E[i].k===k)return i;return 0}
 function vrJump(k){if(!k)return;vrSet(vrFirst(k),1)}
-function vrSet(p,back){VR.pos=back?p:Math.max(VR.pos,p);if(VR.seg){VR.seg.base=VR.pos;VR.seg.skip=VR.seg.fin}vrPaint();if(VR.pos>=VR.E.length)vrDone()}
+function vrSet(p,back){VR.pos=back?p:Math.max(VR.pos,p);if(VR.seg){VR.seg.base=VR.pos;VR.seg.off=VR.seg.len;VR.seg.nerr=0}vrPaint();if(VR.pos>=VR.E.length)vrDone()}
 function vrPaint(v){var E=VR.E,P=Math.max(VR.pos,v||0),cur=E[P]&&E[P].k;
   E.forEach(function(e,x){e.el.classList.toggle('h',x>=P);e.el.classList.toggle('hint',!!e.hint&&x<P);if(x!==P)e.el.classList.remove('err')});
   $$('#q .ay').forEach(function(a){var k=a.dataset.k;a.classList.toggle('cur',k===cur);a.classList.toggle('shown',!$('.w.h',a))});
@@ -288,41 +288,44 @@ function vrPaint(v){var E=VR.E,P=Math.max(VR.pos,v||0),cur=E[P]&&E[P].k;
 }
 function vrBad(k){VR.bad[k]=(VR.bad[k]||0)+1}
 function vrStatus(t,h){var s=$('#vrSt');if(s)s.textContent=t;if(h!=null){var x=$('#vrHeard');if(x)x.textContent=h}}
-function vrStart(){if(!VR||VR.on)return;if(VR.pos>=VR.E.length)vrSet(0,1);VR.on=true;$('#vrMic').classList.add('live');vrStatus('🔴 أسمعك… ابدأ القراءة','');vrRec()}
+function vrStart(){if(!VR||VR.on)return;if(VR.pos>=VR.E.length)vrSet(0,1);VR.on=true;$('#vrMic').classList.add('live');vrStatus('⏳ جارٍ تشغيل المايك…','');vrRec()}
 function vrStop(){if(!VR)return;VR.on=false;var R=VR.R;VR.R=null;if(R){R.onend=R.onresult=R.onerror=null;try{R.abort()}catch(e){}}var m=$('#vrMic');if(m)m.classList.remove('live');vrStatus('⏸ متوقف – اضغط المايك للمتابعة')}
-function vrRec(){var R=new SR();VR.R=R;R.lang='ar-SA';R.continuous=true;R.interimResults=true;R.maxAlternatives=1;
-  VR.seg={base:VR.pos,skip:0,fin:0};
-  R.onresult=function(ev){if(!VR||VR.R!==R)return;var F=[],I=[];
-    for(var i=0;i<ev.results.length;i++){var t=ev.results[i][0].transcript.split(/\s+/).map(skel).filter(Boolean);(ev.results[i].isFinal?F:I).push.apply(ev.results[i].isFinal?F:I,t)}
-    vrStatus('🔴 أسمعك…',ev.results.length?ev.results[ev.results.length-1][0].transcript:'');
-    vrHear(F,I)};
-  R.onerror=function(e){if(!VR||VR.R!==R)return;var m={'not-allowed':'اسمح للمتصفح باستخدام المايك من الإعدادات ثم حاول مرة ثانية','service-not-allowed':'المتصفح منع التعرّف على الصوت، جرّب Chrome أو Safari','network':'التعرّف على الصوت يحتاج إنترنت','language-not-supported':'المتصفح لا يدعم العربية في التعرّف على الصوت','audio-capture':'ما لقينا مايك في الجهاز'}[e.error];
+function vrRec(){var R=new SR();VR.R=R;R.lang='ar-SA';R.continuous=!AND;R.interimResults=true;R.maxAlternatives=1;
+  VR.seg={base:VR.pos,off:0,len:0,nerr:0,F:[]};
+  R.onstart=function(){if(VR&&VR.R===R&&!VR.seg.len)vrStatus('🔴 أسمعك… ابدأ القراءة')};
+  R.onresult=function(ev){if(!VR||VR.R!==R)return;var F=[],I=[],txt='';
+    // أندرويد يكرّر النتائج النهائية أحيانًا، فنأخذ منها الجديد فقط
+    for(var i=ev.resultIndex||0;i<ev.results.length;i++){var r=ev.results[i],t=r[0].transcript;txt=t;if(r.isFinal)VR.seg.F.push(t);else I.push(t)}
+    F=VR.seg.F.join(' ').split(/\s+/).map(skel).filter(Boolean);I=I.join(' ').split(/\s+/).map(skel).filter(Boolean);
+    vrStatus('🔴 أسمعك…','سمعت: '+txt);vrHear(F,I,false);
+    clearTimeout(VR.pt);VR.pt=setTimeout(function(){if(VR&&VR.R===R&&I.length)vrHear(F,I,true)},1200)};
+  R.onerror=function(e){if(!VR||VR.R!==R)return;var m={'not-allowed':'المايك مقفول: اسمح للمتصفح باستخدام المايك من الإعدادات ثم حاول مرة ثانية','service-not-allowed':'الجهاز منع التعرّف على الصوت. في الآيفون: الإعدادات ← عام ← لوحة المفاتيح ← فعّل «الإملاء»','network':'التعرّف على الصوت يحتاج إنترنت','language-not-supported':'المتصفح لا يدعم العربية في التعرّف على الصوت','audio-capture':'ما لقينا مايك في الجهاز، أو تطبيق ثاني يستخدمه'}[e.error];
     if(m){vrStop();vrStatus('⚠️ '+m)}};
-  R.onend=function(){if(!VR||VR.R!==R||!VR.on)return;var t=Date.now();VR.rs=VR.rs.filter(function(x){return t-x<4000});VR.rs.push(t);
-    if(VR.rs.length>6){vrStop();vrStatus('⚠️ المايك توقف، اضغطه مرة ثانية');return}setTimeout(function(){if(VR&&VR.on&&VR.R===R)vrRec()},150)};
+  R.onend=function(){if(!VR||VR.R!==R||!VR.on)return;clearTimeout(VR.pt);var S=VR.seg;if(S.Il&&S.Il.length)vrHear(S.Fl,S.Il,true);
+    var t=Date.now();VR.rs=VR.rs.filter(function(x){return t-x<4000});if(!S.len)VR.rs.push(t);
+    if(VR.rs.length>5){vrStop();vrStatus('⚠️ المايك ما يسمع شي، تأكد من إذن المايك واضغطه مرة ثانية');return}setTimeout(function(){if(VR&&VR.on&&VR.R===R)vrRec()},120)};
   try{R.start()}catch(e){vrStop();vrStatus('⚠️ تعذّر تشغيل المايك')}
 }
-/* مطابقة ما سمعناه بالكلمات المتوقعة؛ يُسمح بالرجوع لبداية الآية وإعادة القراءة */
-function vrRun(s,T){var E=VR.E,j=s,i=0;
+/* مطابقة كل ما سمعناه في الجلسة من جديد في كل مرة (لأن المتصفح يعدّل كلامه)؛
+   الخطأ يوقف التقدّم حتى تُقال الكلمة الصحيحة، ويُسمح بالرجوع لأول الآية */
+function vrRun(s,T){var E=VR.E,j=s,i=0,errs=[],stuck=-1;
   while(i<T.length&&j<E.length){var t=T[i];
     if(!E[j].n){j++;continue}
-    if(sim(t,E[j].n)){i++;j++;continue}
-    if(i+1<T.length&&sim(t+T[i+1],E[j].n)){i+=2;j++;continue}
-    if(j+1<E.length&&sim(t,E[j].n+E[j+1].n)){i++;j+=2;continue}
-    if(FILL[t]){i++;continue}
-    return {j:j,err:true}}
-  return {j:j,err:false}}
-function vrAlign(base,T){if(!T.length)return {j:base,err:false};var best=vrRun(base,T),st=vrFirst(VR.E[Math.min(base,VR.E.length-1)].k);
-  for(var s=base-1;s>=st;s--)if(sim(T[0],VR.E[s].n)){var r=vrRun(s,T);if(r.j>best.j||(best.err&&!r.err&&r.j>=best.j))best=r}
-  return best}
-function vrHear(F,I){var S=VR.seg,Fn=F.slice(S.skip);
-  if(F.length>S.fin){S.fin=F.length;var r=vrAlign(S.base,Fn);
-    if(r.j>VR.pos)VR.pos=r.j;S.base=VR.pos;S.skip=F.length;
-    if(r.err&&VR.pos<VR.E.length){VR.errs++;vrBad(VR.E[VR.pos].k);vrPaint();var w=VR.E[VR.pos].el;w.classList.remove('err');void w.offsetWidth;w.classList.add('err');
-      if(navigator.vibrate)navigator.vibrate(120);vrStatus('✋ توقف! راجع الكلمة المعلَّمة بالأحمر وأعدها');return}
-  }
-  var a=vrAlign(S.base,Fn.length?[]:I);if(!Fn.length&&a.j>=VR.E.length)VR.pos=a.j;vrPaint(a.j);
-  if(VR.pos>=VR.E.length)vrDone()}
+    if(sim(t,E[j].n)){i++;j++;stuck=-1;continue}
+    if(i+1<T.length&&sim(t+T[i+1],E[j].n)){i+=2;j++;stuck=-1;continue}
+    if(j+1<E.length&&sim(t,E[j].n+E[j+1].n)){i++;j+=2;stuck=-1;continue}
+    i++;if(FILL[t])continue;
+    var st=vrFirst(E[j].k),b=-1;for(var x=st;x<j;x++)if(sim(t,E[x].n)){b=x;break}
+    if(b>=0){j=b+1;stuck=-1;continue}
+    if(stuck!==j){errs.push(j);stuck=j}}
+  return {j:j,errs:errs}}
+function vrHear(F,I,force){var S=VR.seg,all=F.concat(I).slice(S.off),n=force?all.length:Math.max(0,F.length-S.off);S.len=S.off+all.length;S.Fl=F;S.Il=I;
+  var c=vrRun(S.base,all.slice(0,n));if(c.j>VR.pos)VR.pos=c.j;
+  if(c.errs.length>S.nerr){S.nerr=c.errs.length;var ej=c.errs[c.errs.length-1];
+    if(c.j===ej&&ej<VR.E.length){VR.errs++;vrBad(VR.E[ej].k);vrPaint();var w=VR.E[ej].el;w.classList.remove('err');void w.offsetWidth;w.classList.add('err');
+      if(navigator.vibrate)navigator.vibrate(120);vrStatus('✋ توقف! راجع الكلمة المعلَّمة بالأحمر وأعدها');return}}
+  var v=vrRun(S.base,all).j;vrPaint(v);
+  if(VR.pos>=VR.E.length||v>=VR.E.length){VR.pos=VR.E.length;vrDone()}}
 function vrDone(){if(!VR||VR.fin)return;VR.fin=1;vrStop();vrPaint();vrStatus('🌟 أتممت التسميع');
   var good=ST.ks.filter(function(k){return !VR.bad[k]&&!DONE[k]}),E=VR.errs,H=VR.hints;
   setTimeout(function(){openSheet('<h3>'+(E+H?'👏 أحسنت المحاولة':'🌟 ما شاء الله! تسميع بلا أخطاء')+'</h3><p>الأخطاء: <b>'+ar(E)+'</b> · المساعدات: <b>'+ar(H)+'</b></p>'+
