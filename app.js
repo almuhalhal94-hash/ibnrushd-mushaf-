@@ -266,13 +266,14 @@ function vrOpen(b){
   M.innerHTML='<div class="vrh"><button class="vmic" id="vrMic" aria-label="تشغيل المايك">🎙️</button><div><b id="vrSt">اضغط المايك وابدأ القراءة من حفظك</b><small id="vrHeard">'+(navigator.onLine===false?'⚠️ التعرّف على الصوت يحتاج إنترنت':'')+'</small></div></div>'+
    '<div class="r"><button class="btn sm" data-v="hint">💡 ساعدني بكلمة</button><button class="btn sm" data-v="ayah">↩ أعد الآية</button><button class="btn sm" data-v="reset">⟲ من البداية</button><span class="vrc">الأخطاء: <b id="vrE">٠</b></span></div>'+
    '<p class="srcs" style="margin:0">اقرأ بصوت واضح، وتظهر الكلمات كلما قرأتها صحيحة. إذا أخطأت يتوقف ويظهر مكان الخطأ بالأحمر، فأعد قراءة الكلمة. اضغط على أي آية لتبدأ منها.</p>';
-  $('#vrMic').onclick=function(){VR.on?vrStop():vrStart()};
+  $('#vrMic').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();VR.on?vrStop():vrStart()});
   $$('[data-v]',M).forEach(function(x){x.onclick=function(){var v=x.dataset.v;
     if(v==='hint'){if(VR.pos<VR.E.length){VR.hints++;vrBad(VR.E[VR.pos].k);VR.E[VR.pos].hint=1;vrSet(VR.pos+1)}}
     else if(v==='ayah')vrJump((VR.E[Math.min(VR.pos,VR.E.length-1)]||{}).k);
     else if(v==='reset'){VR.E.forEach(function(e){e.hint=0});VR.errs=VR.hints=0;VR.bad={};vrSet(0,1)}}});
   ST.cur=ST.ks.filter(function(k){return !DONE[k]})[0]||ST.ks[0];
   vrJump(ST.cur);M.scrollIntoView({block:'nearest',behavior:'smooth'});
+  vrStart();
 }
 document.addEventListener('visibilitychange',function(){if(document.hidden&&VR&&VR.on)vrStop()});
 function vrClose(){vrStop();VR=null;var M=$('#vr');if(M)M.hidden=true;$$('[data-a=vr]').forEach(function(x){x.classList.remove('on')});
@@ -288,8 +289,9 @@ function vrPaint(v){var E=VR.E,P=Math.max(VR.pos,v||0),cur=E[P]&&E[P].k;
 }
 function vrBad(k){VR.bad[k]=(VR.bad[k]||0)+1}
 function vrStatus(t,h){var s=$('#vrSt');if(s)s.textContent=t;if(h!=null){var x=$('#vrHeard');if(x)x.textContent=h}}
-function vrStart(){if(!VR||VR.on)return;if(VR.pos>=VR.E.length)vrSet(0,1);VR.on=true;$('#vrMic').classList.add('live');vrStatus('⏳ جارٍ تشغيل المايك…','');vrRec()}
+function vrStart(){if(!VR||VR.on)return;try{vrStatus('⏳ جارٍ تشغيل المايك…','');if(VR.pos>=VR.E.length)vrSet(0,1);VR.on=true;$('#vrMic').classList.add('live');vrRec()}catch(e){VR.on=false;vrStatus('⚠️ تعذّر تشغيل المايك: '+(e&&e.message||e))}}
 function vrStop(){if(!VR)return;VR.on=false;var R=VR.R;VR.R=null;if(R){R.onend=R.onresult=R.onerror=null;try{R.abort()}catch(e){}}var m=$('#vrMic');if(m)m.classList.remove('live');vrStatus('⏸ متوقف – اضغط المايك للمتابعة')}
+addEventListener('error',function(e){if(VR)vrStatus('⚠️ خطأ: '+e.message)});
 function vrRec(){var R=new SR();VR.R=R;R.lang='ar-SA';R.continuous=!AND;R.interimResults=true;R.maxAlternatives=1;
   VR.seg={base:VR.pos,off:0,len:0,nerr:0,F:[]};
   R.onstart=function(){if(VR&&VR.R===R&&!VR.seg.len)vrStatus('🔴 أسمعك… ابدأ القراءة')};
