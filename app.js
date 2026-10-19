@@ -269,7 +269,7 @@ function vrOpen(b){
   var M=$('#vr');M.hidden=false;
   M.innerHTML='<div class="vrh"><button class="vmic" id="vrMic" aria-label="تشغيل المايك">🎙️</button><div><b id="vrSt">اضغط المايك وابدأ القراءة من حفظك</b><small id="vrHeard">'+(navigator.onLine===false?'⚠️ التعرّف على الصوت يحتاج إنترنت':'')+'</small></div></div>'+
    '<div class="r"><button class="btn sm" data-v="hint">💡 ساعدني بكلمة</button><button class="btn sm" data-v="ayah">↩ أعد الآية</button><button class="btn sm" data-v="reset">⟲ من البداية</button><span class="vrc">الأخطاء: <b id="vrE">٠</b></span></div>'+
-   '<p class="srcs" style="margin:0">اقرأ بصوت واضح، وتظهر الكلمات كلما قرأتها صحيحة. إذا أخطأت يتوقف ويظهر مكان الخطأ بالأحمر، فأعد قراءة الكلمة. وإذا متأكد إنك قلتها صح اضغط على الكلمة الحمراء. اضغط على أي آية لتبدأ منها.</p>';
+   '<p class="srcs" style="margin:0">اقرأ بصوت واضح، وتظهر الكلمات كلما قرأتها صحيحة. إذا أخطأت يتوقف ويظهر مكان الخطأ بالأحمر، فأعد قراءة الكلمة. وإذا متأكد إنك قلتها صح اضغط على الكلمة الحمراء. اضغط على أي آية لتبدأ منها.</p><p class="credit">💡 فكرة التسميع بالمايك: فلاح طايل شاجرة – جزاه الله خيرًا</p>';
   $('#vrMic').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();VR.on?vrStop():vrStart()});
   $$('[data-v]',M).forEach(function(x){x.onclick=function(){var v=x.dataset.v;
     if(v==='hint'){if(VR.pos<VR.E.length){VR.hints++;vrBad(VR.E[VR.pos].k);VR.E[VR.pos].hint=1;vrSet(VR.pos+1)}}
@@ -421,6 +421,7 @@ function installSteps(){return '<h3>📲 ثبّت المصحف على جوالك
 function about(){var h='<section class="view about"><div class="crumb"><a href="#/">الرئيسية</a> ‹ <span>عن المصحف</span></div><h1 class="ttl">عن مصحف ابن رشد</h1>';
   h+='<div class="card" style="padding:14px 16px;margin-top:12px">'+installSteps()+(DEFER?'<div class="row"><button class="btn pri" id="inst2">⤓ ثبّت الآن</button></div>':'')+'</div>';
   h+='<div class="card" style="padding:4px 16px 14px;margin-top:12px"><h3>طريقة الاستخدام</h3><ul class="steps"><li>اختر صفّك، ثم الدرس.</li><li>اضغط على أي <b>كلمة</b> لتعرف معناها وأحكام التجويد فيها.</li><li>اضغط على <b>رقم الآية</b> للتفسير الميسر والمفضّلة وتسجيل الحفظ ومشاركة الآية صورة.</li><li>اضغط على أي <b>لون</b> في دليل الألوان لتعرف الحكم.</li><li><b>🧠 التسميع</b>: أخفِ الآيات وتدرّب على الحفظ، واكشف كلمة كلمة، وكرّر الآية بالعدد الذي تختاره.</li></ul>';
+  h+='<h3>شكر وتقدير</h3><p>فكرة «سمّع الآيات بصوتك» من <b>فلاح طايل شاجرة</b>، فجزاه الله خيرًا وجعلها في ميزان حسناته.</p>';
   h+='<h3>المصادر</h3><ul class="steps"><li>'+esc(D.sources.text)+'.</li><li>'+esc(D.sources.meanings)+'.</li><li>'+esc(D.sources.tafsir)+'.</li><li>الخط: خط مصحف المدينة KFGQPC Uthmanic Script HAFS – مجمع الملك فهد لطباعة المصحف الشريف.</li><li>المنهج: خطة التلاوة ودروس التربية الإسلامية للفصل الأول من موقع القسم.</li></ul><p class="srcs">آخر بناء للبيانات: '+esc(D.built)+'</p></div></section>';
   APP.innerHTML=h;scrollTo(0,0);var b=$('#inst2');if(b)b.onclick=doInstall}
 var DEFER=null;
