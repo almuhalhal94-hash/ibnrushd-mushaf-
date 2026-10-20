@@ -68,7 +68,7 @@ $('#btnDark').onclick=function(){var cur=P.dark!=null?P.dark:matchMedia('(prefer
 /* ---------- النافذة السفلية ---------- */
 var SH=$('#sheet'),lastFocus=null;
 function openSheet(html,after){lastFocus=document.activeElement;$('.body',SH).innerHTML=html;SH.hidden=false;document.body.style.overflow='hidden';$('.panel',SH).scrollTop=0;if(after)after($('.body',SH));setTimeout(function(){$('.x',SH).focus()},50)}
-function closeSheet(){if(SH.hidden)return;SH.hidden=true;document.body.style.overflow='';$$('.w.sel').forEach(function(e){e.classList.remove('sel')});if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+function closeSheet(){recKill();if(SH.hidden)return;SH.hidden=true;document.body.style.overflow='';$$('.w.sel').forEach(function(e){e.classList.remove('sel')});if(lastFocus&&lastFocus.focus)lastFocus.focus()}
 SH.addEventListener('click',function(e){if(e.target.closest('[data-close]'))closeSheet()});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheet()});
 
@@ -122,6 +122,8 @@ function lesson(g,id,q){
   if(AE)h+='<div class="voice"><span class="mic">🎙️</span><span><small>تلاوة الدرس</small><b>بصوت الطالب: '+esc(AE.reader||'')+'</b></span><button class="btn sm pri" data-a="play">▶ استمع</button></div>';
   else h+='<div class="voice soon"><span class="mic">🎙️</span><span><b>التلاوة بصوت طلابنا – قريبًا</b><small>نجهّز تسجيلات طلاب القسم لهذا الدرس بإذن الله</small></span></div>';
   h+='<button class="vrbig" data-a="vr"><span class="vi">🎙️</span><span><b>سمّع الآيات بصوتك</b><small>افتح المايك واقرأ من حفظك، والآيات تظهر كلما قرأت صح</small></span></button>';
+  if(UP&&L.kind==='t')h+='<button class="vrbig send" data-a="send"><span class="vi">📤</span><span><b>أرسل تلاوتك للمعلم</b><small>سجّل تلاوة هذا الدرس من هنا وتوصل لمعلمك مباشرة</small></span></button>';
+  else if(UP)h+='<p class="srcs sendnote">🧠 الحفظ يُسمَّع في المدرسة عند المعلم، وإرسال التسجيلات لدروس التلاوة فقط.</p>';
   h+='<div id="memo" class="card memo" hidden></div><div id="vr" class="card memo vr" hidden></div>';
   h+='<div class="mushaf"><span class="cn a">'+corner()+'</span><span class="cn b">'+corner()+'</span><span class="cn c">'+corner()+'</span><span class="cn d">'+corner()+'</span><div class="inner">'+shead(L.sura);
   if(L.from===1&&L.sura!==9)h+='<div class="bism tjx">'+D.bismillah.map(function(w){return w.map(function(p){return p[0]}).join('')}).join(' ')+'</div><div class="bism-orn">'+star()+'</div>';
@@ -164,6 +166,7 @@ function tool(a,b){
   else if(a==='tj'){setPref('tj',P.tj===false);$('#q').classList.toggle('tj',P.tj!==false);$$('[data-a=tj]').forEach(function(x){x.classList.toggle('on',P.tj!==false)});toast(P.tj===false?'أُلغي تلوين التجويد':'تلوين التجويد مفعّل')}
   else if(a==='leg'){var l=$('#leg');l.hidden=!l.hidden;setPref('leg',!l.hidden);if(!l.hidden)l.scrollIntoView({block:'nearest',behavior:'smooth'})}
   else if(a==='vr')vrOpen(b);
+  else if(a==='send')sendOpen();
   else if(a==='memo'){if(VR)vrClose();ST.memo=!ST.memo;b.classList.toggle('on',ST.memo);memoUI()}
   else if(a==='play'){playLesson()}
 }
@@ -171,6 +174,51 @@ function setLast(k,explicit){LAST={g:ST.g,l:ST.L.id,k:k,t:Date.now()};save('last
 function updProg(){var d=doneCount(ST.L),t=total(ST.L);var m=$('#lpm');if(m){m.style.width=(d/t*100)+'%';$('#lpt').textContent=ar(d)+'/'+ar(t)}}
 function toggleDone(k){if(DONE[k])delete DONE[k];else DONE[k]=1;save('done',DONE);var el=document.getElementById('a'+k.replace(':','-'));if(el)el.classList.toggle('done',!!DONE[k]);updProg();toast(DONE[k]?'✓ ما شاء الله! سُجّلت الآية محفوظة':'أُلغي تسجيل الحفظ');if(DONE[k]&&ST.L&&doneCount(ST.L)===total(ST.L))setTimeout(function(){toast('🎉 أتممت حفظ الدرس كاملًا، بارك الله فيك')},1600)}
 function toggleFav(k){var i=FAV.indexOf(k);if(i>=0)FAV.splice(i,1);else FAV.unshift(k);save('fav',FAV);var el=document.getElementById('a'+k.replace(':','-'));if(el)el.classList.toggle('fav',i<0);toast(i<0?'⭐ أُضيفت إلى المفضّلة':'أُزيلت من المفضّلة')}
+
+/* ---------- إرسال التلاوة للمعلم ----------
+   يسجّل الطالب من المتصفح، ويُرفع التسجيل إلى Google Drive الخاص بالقسم عبر Apps Script
+   (tools/recitations_apps_script.gs). الصف والشعبة إجباريان ويُحفظان في الجهاز. */
+var UP='',REC=null;
+function recKill(){if(!REC)return;clearInterval(REC.ti);try{if(REC.mr&&REC.mr.state!=='inactive'){REC.mr.onstop=null;REC.mr.stop()}}catch(e){}if(REC.st)REC.st.getTracks().forEach(function(t){t.stop()});REC=null}
+function sendOpen(){
+  if(VR)vrClose();stopRepeat();stopAudio();
+  if(!window.MediaRecorder||!navigator.mediaDevices)return openSheet('<h3>📤 أرسل تلاوتك</h3><p>متصفحك الحالي لا يدعم التسجيل. '+(INAPP?'افتح الرابط في <b>Safari</b> أو <b>Chrome</b> (من زر ⋯ ← فتح في المتصفح).':'استخدم <b>Chrome</b> أو <b>Safari</b>.')+'</p>');
+  var S=load('stu',{}),L=ST.L,gs=Object.keys(D.grades),sec='';
+  for(var i=1;i<=15;i++)sec+='<option'+(String(S.s)===String(i)?' selected':'')+'>'+i+'</option>';
+  openSheet('<h3>📤 أرسل تلاوتك للمعلم</h3><p class="srcs" style="margin-top:0">'+esc(L.title)+' · الآيات '+ar(L.from)+'–'+ar(L.to)+'</p>'+
+    '<div class="sendf"><label>الصف<select id="sg"><option value="">اختر صفك</option>'+gs.map(function(g){return '<option value="'+g+'"'+(S.g===g?' selected':'')+'>'+esc(D.grades[g].name)+'</option>'}).join('')+'</select></label>'+
+    '<label>الشعبة<select id="ss"><option value="">اختر</option>'+sec+'</select></label>'+
+    '<label class="full">اسمك الثلاثي<input id="sn" maxlength="60" autocomplete="name" value="'+esc(S.n||'')+'" placeholder="مثال: محمد أحمد علي"></label></div>'+
+    '<div class="recb"><button class="btn pri" id="rb">⏺ ابدأ التسجيل</button><b id="rt">٠:٠٠</b></div><audio id="ra" controls hidden></audio>'+
+    '<p class="srcs" id="rs">اقرأ آيات الدرس كاملة بهدوء، ثم اسمع تسجيلك قبل الإرسال.</p>'+
+    '<button class="btn pri big" id="sb" disabled>📤 إرسال للمعلم</button>',function(b){
+    var rb=$('#rb',b),rt=$('#rt',b),ra=$('#ra',b),rs=$('#rs',b),sb=$('#sb',b),blob=null;
+    function form(){return {g:$('#sg',b).value,s:$('#ss',b).value,n:$('#sn',b).value.replace(/\s+/g,' ').trim()}}
+    function upd(){var f=form();sb.disabled=!(blob&&f.g&&f.s&&f.n.split(' ').length>=2)}
+    $$('select,input',b).forEach(function(x){x.oninput=x.onchange=upd});
+    rb.onclick=function(){
+      if(REC&&REC.mr.state==='recording'){REC.mr.stop();return}
+      blob=null;ra.hidden=true;upd();
+      navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}).then(function(st){
+        var mt=['audio/mp4','audio/webm;codecs=opus','audio/webm'].filter(function(t){return MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t)})[0];
+        var mr=new MediaRecorder(st,mt?{mimeType:mt,audioBitsPerSecond:64000}:undefined),ch=[],t0=Date.now();
+        REC={mr:mr,st:st};
+        mr.ondataavailable=function(e){if(e.data&&e.data.size)ch.push(e.data)};
+        mr.onstop=function(){clearInterval(REC.ti);st.getTracks().forEach(function(t){t.stop()});
+          blob=new Blob(ch,{type:(mr.mimeType||mt||'audio/webm').split(';')[0]});REC=null;
+          ra.src=URL.createObjectURL(blob);ra.hidden=false;rb.textContent='⟲ أعد التسجيل';rb.classList.remove('live');rs.textContent='اسمع تسجيلك، وإذا تمام اضغط إرسال.';upd()};
+        mr.start(1000);rb.textContent='⏹ إيقاف التسجيل';rb.classList.add('live');rs.textContent='🔴 جارٍ التسجيل… اقرأ الآن';
+        REC.ti=setInterval(function(){var x=Math.floor((Date.now()-t0)/1000);rt.textContent=ar(Math.floor(x/60))+':'+ar(('0'+x%60).slice(-2));if(x>=900)mr.stop()},500);
+      }).catch(function(){rs.textContent='⚠️ ما قدرنا نشغّل المايك: اسمح للمتصفح باستخدامه ثم حاول مرة ثانية.'})};
+    sb.onclick=function(){var f=form();if(sb.disabled)return;save('stu',f);sb.disabled=true;rb.disabled=true;rs.textContent='⏳ جارٍ الإرسال… لا تقفل الصفحة';
+      var fr=new FileReader();fr.onload=function(){
+        fetch(UP,{method:'POST',body:JSON.stringify({grade:f.g,gradeName:D.grades[f.g].name,section:f.s,name:f.n,lesson:L.title,lessonGrade:D.grades[ST.g].name,ayat:L.from+'-'+L.to,mime:blob.type,data:String(fr.result).split(',')[1]})})
+        .then(function(r){return r.json()}).then(function(j){if(!j.ok)throw 0;
+          b.innerHTML='<h3>✅ وصلت تلاوتك للمعلم</h3><p>جزاك الله خيرًا يا '+esc(f.n.split(' ')[0])+'، وبارك في حفظك وتلاوتك.</p><button class="btn pri" data-close>تم</button>'})
+        .catch(function(){sb.disabled=false;rb.disabled=false;rs.textContent='⚠️ ما وصل التسجيل. تأكد من الإنترنت واضغط إرسال مرة ثانية.'})};
+      fr.readAsDataURL(blob)};
+    upd()});
+}
 
 /* ---------- نوافذ الكلمة والآية والحكم ---------- */
 function meaningsHTML(A){var all=A.m.map(function(m){return [m[2],m[3]]}).concat(A.u);if(!all.length)return '';
