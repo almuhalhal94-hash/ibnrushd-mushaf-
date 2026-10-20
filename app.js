@@ -185,7 +185,7 @@ function sendOpen(){
   if(VR)vrClose();stopRepeat();stopAudio();
   if(!window.MediaRecorder||!navigator.mediaDevices)return openSheet('<h3>📤 أرسل تلاوتك</h3><p>متصفحك الحالي لا يدعم التسجيل. '+(INAPP?'افتح الرابط في <b>Safari</b> أو <b>Chrome</b> (من زر ⋯ ← فتح في المتصفح).':'استخدم <b>Chrome</b> أو <b>Safari</b>.')+'</p>');
   var S=load('stu',{}),L=ST.L,gs=Object.keys(D.grades),sec='';
-  for(var i=1;i<=15;i++)sec+='<option'+(String(S.s)===String(i)?' selected':'')+'>'+i+'</option>';
+  for(var i=1;i<=4;i++)sec+='<option'+(String(S.s)===String(i)?' selected':'')+'>'+i+'</option>';
   openSheet('<h3>📤 أرسل تلاوتك للمعلم</h3><p class="srcs" style="margin-top:0">'+esc(L.title)+' · الآيات '+ar(L.from)+'–'+ar(L.to)+'</p>'+
     '<div class="sendf"><label>الصف<select id="sg"><option value="">اختر صفك</option>'+gs.map(function(g){return '<option value="'+g+'"'+(S.g===g?' selected':'')+'>'+esc(D.grades[g].name)+'</option>'}).join('')+'</select></label>'+
     '<label>الشعبة<select id="ss"><option value="">اختر</option>'+sec+'</select></label>'+
