@@ -1,10 +1,11 @@
 /* مصحف ابن رشد — يعمل بدون إنترنت بعد أول فتح */
-var V='mushaf-v16';
+var V='mushaf-v17';
 var SHELL=['./','index.html','style.css','app.js','data/mushaf.json','manifest.webmanifest',
   'fonts/UthmanicHafs.woff2','fonts/ArefRuqaa-Bold.woff2','fonts/Tajawal-Regular.woff2','fonts/Tajawal-Bold.woff2','fonts/Tajawal-ExtraBold.woff2',
   'icons/icon-192.png','icons/icon-512.png','icons/apple-touch-icon.png'];
 self.addEventListener('install',function(e){e.waitUntil(caches.open(V).then(function(c){return c.addAll(SHELL.map(function(u){return new Request(u,{cache:'reload'})}))}).then(function(){return self.skipWaiting()}))});
-self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==V&&k!=='mushaf-audio'}).map(function(k){return caches.delete(k)}))}).then(function(){return self.clients.claim()}))});
+self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(ks){// نفس النطاق فيه موقع القسم وتطبيقاته: نحذف ذاكرة المصحف القديمة فقط
+    return Promise.all(ks.filter(function(k){return k.indexOf('mushaf-v')===0&&k!==V}).map(function(k){return caches.delete(k)}))}).then(function(){return self.clients.claim()}))});
 self.addEventListener('fetch',function(e){
   var r=e.request,u=new URL(r.url);
   if(r.method!=='GET'||u.origin!==location.origin)return;

@@ -80,6 +80,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .tools{display:flex;gap:6px}
 .ic{width:40px;height:40px;border-radius:12px;border:1px solid color-mix(in srgb,var(--gold) 55%,transparent);background:color-mix(in srgb,var(--barInk) 8%,transparent);font-size:19px;display:grid;place-items:center}
 .ic:active{transform:scale(.94)}
+.ic.home{color:inherit;text-decoration:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
@@ -364,3 +365,15 @@ body.vr-on{padding-bottom:96px}
 #ra{width:100%;margin:6px 0}
 #sb.big{width:100%;padding:14px;font-size:17px}
 #sb:disabled{opacity:.5}
+/* أزرار الدرس: زرّان متجاوران بدل الشرائط الطويلة */
+.lacts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px}
+.lacts.one{grid-template-columns:1fr}
+.lacts .vrbig{margin:0;flex-direction:column;text-align:center;gap:6px;padding:14px 8px 12px;min-height:118px;justify-content:center}
+.lacts.one .vrbig{flex-direction:row;text-align:start;min-height:0}
+.lacts .vrbig .vi{width:46px;height:46px;font-size:23px}
+.lacts .vrbig b{font-size:16px}.lacts .vrbig small{font-size:12px;line-height:1.5}
+.lacts .vrbig.on b::after{content:"";display:none}
+.lacts .vrbig.on small::after{content:" · اضغط للإغلاق"}
+.tbar{justify-content:center}
+.tbar .btn{padding:6px 12px;min-height:38px;font-size:14px}
+.tbar .btn[data-a^="fs"]{padding:6px 10px;min-width:40px}

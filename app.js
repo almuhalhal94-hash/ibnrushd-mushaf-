@@ -3,7 +3,7 @@
 (function(){
 'use strict';
 var D=null,AUDIO={},APP=document.getElementById('app'),ROOT=document.documentElement;
-var SITE='https://almuhalhal94-hash.github.io/ibnrushd-mushaf-/';
+var SITE='https://almuhalhal94-hash.github.io/ibnrushd-islamic/mushaf/';
 
 /* ---------- تخزين آمن ---------- */
 function load(k,d){try{var v=localStorage.getItem('mr_'+k);return v?JSON.parse(v):d}catch(e){return d}}
@@ -118,16 +118,17 @@ function lesson(g,id,q){
   ST={g:g,L:L,ks:ks,ae:AE,memo:false,mode:P.mode||'all',rev:{},cur:ks[0],rep:P.rep||3};
   var h='<section class="view"><div class="crumb"><a href="#/">الرئيسية</a> ‹ <a href="#/g/'+g+'">'+esc(G.name)+'</a> ‹ <span>'+(L.kind==='h'?'آيات الحفظ':'التلاوة')+'</span></div>';
   h+='<h1 class="ttl">'+esc(L.title)+'</h1><p class="crumb">الآيات '+ar(L.from)+'–'+ar(L.to)+' · الأسبوع '+ar(L.week)+'</p>';
-  h+='<div class="tbar" role="toolbar" aria-label="أدوات الدرس"><button class="btn sm" data-a="fs-" aria-label="تصغير الخط">ا−</button><button class="btn sm" data-a="fs+" aria-label="تكبير الخط">ا+</button><button class="btn sm '+(P.tj===false?'':'on')+'" data-a="tj">🎨 التجويد</button><button class="btn sm" data-a="leg">🎓 دليل الألوان</button><button class="btn sm" data-a="memo">🧠 التسميع</button>'+(AE?'<button class="btn sm gold" data-a="play">▶ الدرس كامل</button>':'')+'</div>';
+  h+='<div class="tbar" role="toolbar" aria-label="أدوات الدرس"><button class="btn sm" data-a="fs-" aria-label="تصغير الخط">ا−</button><button class="btn sm" data-a="fs+" aria-label="تكبير الخط">ا+</button><button class="btn sm '+(P.tj===false?'':'on')+'" data-a="tj">🎨 تجويد</button><button class="btn sm" data-a="leg">🎓 الألوان</button><button class="btn sm" data-a="memo">🙈 حفظ</button>'+(AE?'<button class="btn sm gold" data-a="play">▶ الدرس كامل</button>':'')+'</div>';
   if(AE)h+='<div class="voice"><span class="mic">🎙️</span><span><small>تلاوة الدرس</small><b>بصوت الطالب: '+esc(AE.reader||'')+'</b></span><button class="btn sm pri" data-a="play">▶ استمع</button></div>';
-  else h+='<div class="voice soon"><span class="mic">🎙️</span><span><b>التلاوة بصوت طلابنا – قريبًا</b><small>نجهّز تسجيلات طلاب القسم لهذا الدرس بإذن الله</small></span></div>';
-  h+='<button class="vrbig" data-a="vr"><span class="vi">🎙️</span><span><b>سمّع الآيات بصوتك</b><small>افتح المايك واقرأ من حفظك، والآيات تظهر كلما قرأت صح</small></span></button>';
-  if(UP&&L.kind==='t')h+='<button class="vrbig send" data-a="send"><span class="vi">📤</span><span><b>أرسل تلاوتك للمعلم</b><small>سجّل تلاوة هذا الدرس من هنا وتوصل لمعلمك مباشرة</small></span></button>';
-  else if(UP)h+='<p class="srcs sendnote">🧠 الحفظ يُسمَّع في المدرسة عند المعلم، وإرسال التسجيلات لدروس التلاوة فقط.</p>';
+  // زرّان واضحان فقط: سمّع بصوتك، وأرسل تلاوتك (في دروس التلاوة)
+  var snd=UP&&L.kind==='t';
+  h+='<div class="lacts'+(snd?'':' one')+'"><button class="vrbig" data-a="vr"><span class="vi">🎙️</span><span><b>سمّع بصوتك</b><small>اقرأ من حفظك والآيات تظهر</small></span></button>'+
+    (snd?'<button class="vrbig send" data-a="send"><span class="vi">📤</span><span><b>أرسل تلاوتك</b><small>سجّل ويوصل لمعلمك</small></span></button>':'')+'</div>';
+  if(UP&&L.kind!=='t')h+='<p class="srcs sendnote">🧠 الحفظ يُسمَّع في المدرسة عند المعلم.</p>';
   h+='<div id="memo" class="card memo" hidden></div><div id="vr" class="card memo vr" hidden></div>';
   h+='<div class="mushaf"><span class="cn a">'+corner()+'</span><span class="cn b">'+corner()+'</span><span class="cn c">'+corner()+'</span><span class="cn d">'+corner()+'</span><div class="inner">'+shead(L.sura);
   if(L.from===1&&L.sura!==9)h+='<div class="bism tjx">'+D.bismillah.map(function(w){return w.map(function(p){return p[0]}).join('')}).join(' ')+'</div><div class="bism-orn">'+star()+'</div>';
-  h+='<div class="legend" id="leg"'+(P.leg===false?' hidden':'')+'></div>';
+  h+='<div class="legend" id="leg"'+(P.leg?'':' hidden')+'></div>';
   h+='<div class="q'+(P.tj===false?'':' tj')+'" id="q">';
   ks.forEach(function(k){var a=k.split(':')[1],A=D.ayat[k];
     h+='<span class="ay'+(DONE[k]?' done':'')+(FAV.indexOf(k)>=0?' fav':'')+(LAST&&LAST.k===k&&LAST.l===id&&LAST.g===g?' mark':'')+'" id="a'+k.replace(':','-')+'" data-k="'+k+'">'+A.w.map(function(w,i){return '<span class="w" data-i="'+i+'">'+wordHTML(w)+'</span>'}).join(' ')+' <span class="n" role="button" tabindex="0" aria-label="الآية '+a+'">'+ar(a)+'</span></span> '});
