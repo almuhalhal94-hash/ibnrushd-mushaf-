@@ -22,6 +22,7 @@ if(/github\.io$/.test(location.hostname)&&location.pathname.indexOf('/ibnrushd-m
 <script>try{var t=JSON.parse(localStorage.getItem('mr_prefs')||'{}');if(t.skin)document.documentElement.dataset.skin=t.skin;if(t.dark!=null)document.documentElement.dataset.dark=t.dark?'1':'0'}catch(e){}</script>
 </head>
 <body>
+<style>.tri{display:flex;gap:4px;padding:calc(6px + env(safe-area-inset-top,0px)) 6px 6px;background:#053524;border-bottom:1.5px solid #e9b44c;position:relative;z-index:60;direction:rtl}.tri a{flex:1 1 auto;display:flex;align-items:center;justify-content:center;gap:5px;min-height:38px;padding:0 5px;border-radius:999px;color:#f6efd9;text-decoration:none;min-width:0;font-family:inherit;font-weight:700;font-size:13px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tri a b{flex:none;width:19px;height:19px;border-radius:50%;display:inline-grid;place-items:center;background:rgba(233,180,76,.18);color:#e9b44c;font-size:11px}.tri a.on{background:#e9b44c;color:#2b1d03}.tri a.on b{background:#2b1d03;color:#e9b44c}@media (max-width:370px){.tri a{font-size:11.5px;gap:4px;padding:0 4px}.tri a b{width:16px;height:16px;font-size:10px}}@media print{.tri{display:none}}</style><nav class="tri" aria-label="التنقّل بين موقع القسم وملف التلاوة والمصحف"><a href="/ibnrushd-islamic/"><b>1</b>موقع القسم</a><a href="/ibnrushd-islamic/tilawa-file.html"><b>2</b>ملف التلاوة</a><a href="/ibnrushd-islamic/mushaf/" class="on" aria-current="page"><b>3</b>مصحف ابن رشد</a></nav>
 <div id="inapp" hidden></div>
 <header class="bar">
   <a href="#/" class="brand" aria-label="الرئيسية">
@@ -29,7 +30,6 @@ if(/github\.io$/.test(location.hostname)&&location.pathname.indexOf('/ibnrushd-m
     <span><b>مصحف ابن رشد</b><small>قسم التربية الإسلامية</small></span>
   </a>
   <div class="tools">
-    <a class="ic home" href="https://almuhalhal94-hash.github.io/ibnrushd-islamic/" aria-label="موقع القسم" title="موقع القسم"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3 11 12 4l9 7M5.5 9.5V20h5v-5.5h3V20h5V9.5"/></svg></a>
     <button id="btnInstall" class="ic" hidden aria-label="تثبيت التطبيق" title="تثبيت">⤓</button>
     <button id="btnSkin" class="ic" aria-label="تبديل التصميم: هوية القسم أو ورق المصحف" title="تبديل التصميم">◈</button>
     <button id="btnDark" class="ic" aria-label="الوضع الليلي" title="الوضع الليلي">☾</button>
