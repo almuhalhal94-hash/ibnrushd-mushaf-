@@ -178,7 +178,7 @@ function toggleFav(k){var i=FAV.indexOf(k);if(i>=0)FAV.splice(i,1);else FAV.unsh
 /* ---------- إرسال التلاوة للمعلم ----------
    يسجّل الطالب من المتصفح، ويُرفع التسجيل إلى Google Drive الخاص بالقسم عبر Apps Script
    (tools/recitations_apps_script.gs). الصف والشعبة إجباريان ويُحفظان في الجهاز. */
-var UP='',REC=null;
+var UP='https://script.google.com/macros/s/AKfycbwva3-JvX3W3oGGqJlZvAObwY22RaWNiNmaBSQolKqtRgr8YpnWQlScjoJlX6nuZd9Q/exec',REC=null;
 function recKill(){if(!REC)return;clearInterval(REC.ti);try{if(REC.mr&&REC.mr.state!=='inactive'){REC.mr.onstop=null;REC.mr.stop()}}catch(e){}if(REC.st)REC.st.getTracks().forEach(function(t){t.stop()});REC=null}
 function sendOpen(){
   if(VR)vrClose();stopRepeat();stopAudio();
