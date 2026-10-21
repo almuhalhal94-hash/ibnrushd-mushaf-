@@ -13,7 +13,9 @@ import numpy as np
 SR = 48000
 LEAD = 0.25                      # بداية الكلام بعد ظهور المشهد
 KEEP = 10.0                      # صوت الآية الأصلي
-SCENES = [12.0, 16.0, 22.0, 30.5, 35.0, 39.5, 43.0, 49.0, 52.5, 56.0, 60.0]
+TOTAL = 63.0                     # 60 ث + تثبيت آخر لقطة 3 ث (النهاية كانت سريعة)
+HOLD = TOTAL - 60.0
+SCENES = [12.0, 16.0, 22.0, 30.5, 35.0, 39.5, 43.0, 49.0, 52.5, 56.0, TOTAL]
 MAXPAUSE = 0.22                  # أقصى سكتة داخل الجملة (للجمل اللي تضيق على مشهدها)
 rng = np.random.default_rng(7)
 
@@ -194,7 +196,7 @@ def main(vo_path, video, outdir, ayah=None):
             z = min(len(vo) / SR, end_t + 0.35)
         segs.append((a, on, z))
 
-    track = np.zeros(int(60 * SR))
+    track = np.zeros(int(TOTAL * SR))
     plan = []
     for i, (a, on, z) in enumerate(segs):
         seg = vo[int(a * SR):int(z * SR)]
@@ -215,7 +217,7 @@ def main(vo_path, video, outdir, ayah=None):
     # رفع الصوت لمستوى الآية (-14 LUFS تقريبًا) يتم في ffmpeg
     save(os.path.join(outdir, "vo_track.wav"), track)
 
-    sfx = np.zeros((2, int(60 * SR)))
+    sfx = np.zeros((2, int(TOTAL * SR)))
 
     def put(x, t_hit, at_frac, g_db):
         p = int((t_hit - at_frac * x.shape[1] / SR) * SR)
@@ -241,6 +243,7 @@ def main(vo_path, video, outdir, ayah=None):
     put(whoosh(0.55, -1), 52.4, 0.62, -10)
     put(riser(0.9), 55.95, 1.0, -10)      # طلوع للباركود
     put(shimmer(2.0), 56.05, 0.0, -11)
+    put(shimmer(2.6), plan[-1]['vo_end'] + 0.35, 0.0, -17)   # لمعة ختام هادية بعد آخر كلمة
     save(os.path.join(outdir, "sfx_track.wav"), sfx)
     json.dump(plan, open(os.path.join(outdir, "plan.json"), "w"), ensure_ascii=False, indent=1)
     for r in plan:
@@ -253,12 +256,12 @@ def mix(video, ayah, outdir):
     """صوت الآية + التعليق + المؤثرات (تنخفض تحت التعليق) ← -14 LUFS."""
     import os
     j = lambda f: os.path.join(outdir, f)
-    fc = ("[0:a]aresample=48000,apad=whole_dur=60[orig];"
+    fc = ("[0:a]aresample=48000,apad=whole_dur=%g[orig];"
           "[1:a]highpass=f=70,acompressor=threshold=-20dB:ratio=2.5:attack=8:release=120:makeup=1,volume=8dB[vo];"
           "[vo]asplit=2[vo1][key];"
           "[2:a][key]sidechaincompress=threshold=0.02:ratio=8:attack=15:release=350:makeup=1[sfxd];"
-          "[orig][vo1][sfxd]amix=inputs=3:normalize=0:duration=first,atrim=0:60,"
-          "alimiter=limit=0.79:attack=3:release=60:level=0[m]")
+          "[orig][vo1][sfxd]amix=inputs=3:normalize=0:duration=first,atrim=0:%g,afade=t=out:st=%g:d=1.6,"
+          "alimiter=limit=0.79:attack=3:release=60:level=0[m]") % (TOTAL, TOTAL, TOTAL - 1.6)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", ayah, "-i", j("vo_track.wav"), "-i", j("sfx_track.wav"),
                     "-filter_complex", fc, "-map", "[m]", "-c:a", "pcm_f32le", j("premix.wav")], check=True)
     log = subprocess.run(["ffmpeg", "-i", j("premix.wav"), "-af", "ebur128", "-f", "null", "-"],
@@ -267,7 +270,8 @@ def mix(video, ayah, outdir):
     i_lufs = float(re.findall(r"I:\s+(-?[\d.]+) LUFS", log)[-1])
     gain = -14.0 - i_lufs
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", j("premix.wav"), "-map", "0:v", "-map", "1:a",
-                    "-c:v", "copy", "-af", f"volume={gain:.2f}dB", "-c:a", "aac", "-b:a", "256k", "-ar", "48000",
+                    "-vf", f"tpad=stop_mode=clone:stop_duration={HOLD},fade=t=out:st={TOTAL - 0.8}:d=0.8",
+                    "-c:v", "libx264", "-preset", "slow", "-crf", "15", "-pix_fmt", "yuv420p", "-r", "60", "-af", f"volume={gain:.2f}dB", "-c:a", "aac", "-b:a", "256k", "-ar", "48000",
                     "-movflags", "+faststart", "-shortest", j("final.mp4")], check=True)
     print("premix", i_lufs, "LUFS, gain", round(gain, 2))
 
