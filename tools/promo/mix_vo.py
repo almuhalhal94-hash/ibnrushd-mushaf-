@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """تركيب تعليق أ. طلال على فيديو مصحف ابن رشد.
 
-python3 tools/promo/mix_vo.py VO.mp3 VIDEO.mp4 OUT_DIR
-- أول 10 ثواني: صوت الفيديو الأصلي (الآية) كما هو.
-- بعد 10: يشيل الصوت القديم، ويحط كل جملة بعد ظهور مشهدها بـ LEAD ثانية.
+python3 tools/promo/mix_vo.py VO.mp3 VIDEO.mp4 OUT_DIR [AYAH.flac]
+- البداية: صوت الآية كاملة (ayah_full.flac، تنتهي 11.25).
+- بعدها: يشيل الصوت القديم، ويحط كل جملة بعد ظهور مشهدها بـ LEAD ثانية.
 - مؤثرات مركّبة (وووش/لمعة/طلوع/نزول) تنخفض تحت الصوت، والمكساج -14 LUFS.
 يكتب OUT_DIR/vo_track.wav و sfx_track.wav و plan.json.
 """
@@ -157,7 +157,7 @@ def drop(dur=0.7):
     return pan(x / np.abs(x).max(), 0.4, -0.4)
 
 
-def main(vo_path, video, outdir):
+def main(vo_path, video, outdir, ayah=None):
     vo = load(vo_path)
     gaps = silences(vo)                      # السكتات بين الجمل وداخلها
     # حدود الجمل: أطول السكتات تفصل بين الجمل (9 فواصل لـ 10 جمل)
@@ -224,7 +224,7 @@ def main(vo_path, video, outdir):
         sfx[:, p:e] += x[:, :e - p]
 
     # الانتقالات (وقت منتصف الانتقال = بداية المشهد - 0.12)
-    put(riser(1.0), 12.0, 1.0, -9)        # طلوع للشعار
+    put(riser(0.75), 12.0, 1.0, -9)       # طلوع للشعار (يبدأ بعد نهاية الآية)
     put(shimmer(1.8), 12.02, 0.0, -11)    # لمعة الشعار الذهبي
     put(whoosh(0.55, 1), 15.9, 0.62, -10)
     put(whoosh(0.6, -1), 21.85, 0.62, -10)
@@ -245,7 +245,32 @@ def main(vo_path, video, outdir):
     json.dump(plan, open(os.path.join(outdir, "plan.json"), "w"), ensure_ascii=False, indent=1)
     for r in plan:
         print(r)
+    if ayah:
+        mix(video, ayah, outdir)
+
+
+def mix(video, ayah, outdir):
+    """صوت الآية + التعليق + المؤثرات (تنخفض تحت التعليق) ← -14 LUFS."""
+    import os
+    j = lambda f: os.path.join(outdir, f)
+    fc = ("[0:a]aresample=48000,apad=whole_dur=60[orig];"
+          "[1:a]highpass=f=70,acompressor=threshold=-20dB:ratio=2.5:attack=8:release=120:makeup=1,volume=8dB[vo];"
+          "[vo]asplit=2[vo1][key];"
+          "[2:a][key]sidechaincompress=threshold=0.02:ratio=8:attack=15:release=350:makeup=1[sfxd];"
+          "[orig][vo1][sfxd]amix=inputs=3:normalize=0:duration=first,atrim=0:60,"
+          "alimiter=limit=0.79:attack=3:release=60:level=0[m]")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", ayah, "-i", j("vo_track.wav"), "-i", j("sfx_track.wav"),
+                    "-filter_complex", fc, "-map", "[m]", "-c:a", "pcm_f32le", j("premix.wav")], check=True)
+    log = subprocess.run(["ffmpeg", "-i", j("premix.wav"), "-af", "ebur128", "-f", "null", "-"],
+                         capture_output=True, text=True).stderr
+    import re
+    i_lufs = float(re.findall(r"I:\s+(-?[\d.]+) LUFS", log)[-1])
+    gain = -14.0 - i_lufs
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", j("premix.wav"), "-map", "0:v", "-map", "1:a",
+                    "-c:v", "copy", "-af", f"volume={gain:.2f}dB", "-c:a", "aac", "-b:a", "256k", "-ar", "48000",
+                    "-movflags", "+faststart", "-shortest", j("final.mp4")], check=True)
+    print("premix", i_lufs, "LUFS, gain", round(gain, 2))
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:4])
+    main(*sys.argv[1:5])
